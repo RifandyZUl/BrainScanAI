@@ -1,0 +1,16 @@
+# Normalize line endings: LF di repository, checkout sesuai OS
+* text=auto eol=lf
+
+# Force LF untuk Python (agar tidak berisik di git diff)
+*.py text eol=lf
+
+# Force CRLF untuk Windows batch scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary (jangan disentuh)
+*.pth binary
+*.gz binary
+*.nii binary
+*.png binary
+*.jpg binary

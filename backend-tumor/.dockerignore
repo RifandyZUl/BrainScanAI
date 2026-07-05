@@ -1,0 +1,33 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Upload files (dipasang via volume)
+uploads/
+
+# Checkpoint model (dipasang via volume .:/app, tidak perlu di-copy saat build)
+# best_model.pth = 348MB, L5FINAL3_COSINE_best_model.pth = 4MB
+checkpoints/
+
+# MedNeXt lama (sudah tidak dipakai)
+backend_mednext/
+
+# File sementara
+pasien_temp.zip
+database.db
+*.db
+
+# Git
+.git/
+.gitignore
+
+# Editor
+.vscode/
+*.DS_Store

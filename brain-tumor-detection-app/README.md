@@ -1,4 +1,4 @@
-# 🧠 Axon Vision - Frontend (Flutter)
+# 🧠 NeuroScan AI - Frontend (Flutter)
 
 Axon Vision is the user interface (Frontend) for the **3D Brain Tumor Detection System**. Built with Flutter, this application is specifically designed for Web platforms, providing an interactive experience for MRI data analysis, patient management, and real-time 3D visualization.
 

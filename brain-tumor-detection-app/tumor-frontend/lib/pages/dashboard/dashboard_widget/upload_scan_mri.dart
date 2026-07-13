@@ -150,13 +150,31 @@ class _UploadScanMriState extends State<UploadScanMri> {
       } else {
         if (current < 0.50) {
           // Fase 1: Jalan stabil dan cepat dari awal hingga 50%
-          // L5 mencapai 50% dalam ~1.5 detik, Paper mencapai 50% dalam ~3 detik
-          double speed = modelType == 'paper' ? 0.0083 : 0.0167;
+          // L5 mencapai 50% dalam ~3 detik, Paper mencapai 50% dalam ~6 detik
+          double speed = modelType == 'paper' ? 0.0041 : 0.0083;
           progressNotifier.value = (current + speed).clamp(0.0, 0.50);
         } else {
           // Fase 2: Di atas 50%
           if (modelType == 'paper') {
-            // Khusus Model Paper: Perlambatan bertingkat (50%-80% lambat, 80%-99% super lambat)
+            // Model Paper: Lebih lambat lagi dari optimisasi
+            double limit = 0.995;
+            double remaining = limit - current;
+            if (remaining > 0) {
+              double divider;
+              if (current < 0.75) {
+                divider = 2000.0;
+              } else if (current < 0.85) {
+                divider = 4000.0;
+              } else {
+                divider = 7000.0;
+              }
+              
+              double creepStep = remaining / divider;
+              if (creepStep < 0.00001) creepStep = 0.00001; // langkah minimum super kecil
+              progressNotifier.value = (current + creepStep).clamp(0.0, 0.99);
+            }
+          } else {
+            // Model L5/Optimisasi: Disamakan dengan kecepatan Model Paper sebelumnya
             double limit = 0.995;
             double remaining = limit - current;
             if (remaining > 0) {
@@ -170,18 +188,8 @@ class _UploadScanMriState extends State<UploadScanMri> {
               }
               
               double creepStep = remaining / divider;
-              if (creepStep < 0.00002) creepStep = 0.00002; // langkah minimum super kecil
+              if (creepStep < 0.00002) creepStep = 0.00002;
               progressNotifier.value = (current + creepStep).clamp(0.0, 0.99);
-            }
-          } else {
-            // Model L5: Merayap biasa menuju 98%
-            double limit = 0.98;
-            double remaining = limit - current;
-            if (remaining > 0) {
-              double divider = 220.0;
-              double creepStep = remaining / divider;
-              if (creepStep < 0.0001) creepStep = 0.0001;
-              progressNotifier.value = (current + creepStep).clamp(0.0, 0.98);
             }
           }
         }

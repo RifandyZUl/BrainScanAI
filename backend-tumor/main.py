@@ -333,42 +333,88 @@ def norm01(x):
     return np.clip((x - lo) / (hi - lo + 1e-8), 0, 1)
 
 def generate_single_3d(mri_ds, pred_ds, out_path, target_label, ds=2, show_brain=True):
-    colors_3d = {1:("NETC","#e41a1c"), 2:("SNFH","#377eb8"), 3:("ET","#4daf4a"), 4:("RC","#984ea3")}
-    op_map = {1:0.95, 2:0.18, 3:0.55, 4:0.35} 
+    # Match Colab colors and naming exactly:
+    # 1: NETC (Cyan), 2: SNFH (Yellow), 3: ET (Red), 4: RC (Purple/Magenta)
+    colors_3d = {
+        1: ("NETC", "#00ffff"),  # Cyan
+        2: ("SNFH", "#e5c100"),  # Yellow/Gold
+        3: ("ET",   "#ff0000"),  # Red
+        4: ("RC",   "#ff00ff")   # Purple/Magenta
+    }
+    # Match Colab opacities exactly:
+    op_map = {1: 0.7, 2: 0.4, 3: 0.9, 4: 0.8}
     fig_3d = go.Figure()
 
     if show_brain:
-        brain = mri_ds > 0.1
+        # Match Colab add_brain_outline: brain_mask = (mri_vol > 0.02)
+        brain = mri_ds > 0.02
         if brain.sum() > 0:
-            brain_smooth = gaussian_filter(brain.astype(float), sigma=1.2)
-            v, f, _, _ = measure.marching_cubes(brain_smooth, level=0.5)
-            fig_3d.add_trace(go.Mesh3d(
-                x=v[:,0] * ds, y=v[:,1] * ds, z=v[:,2] * ds,
-                i=f[:,0], j=f[:,1], k=f[:,2],
-                color="lightgray", opacity=0.4, lighting=dict(ambient=0.6, diffuse=0.8),
-                name="Brain", hoverinfo="skip"
-            ))
+            # Match Colab: sigma=1.5, level=0.1, color="gainsboro", opacity=0.05
+            brain_smooth = gaussian_filter(brain.astype(float), sigma=1.5)
+            try:
+                v, f, _, _ = measure.marching_cubes(brain_smooth, level=0.1)
+                fig_3d.add_trace(go.Mesh3d(
+                    x=v[:,0] * ds, y=v[:,1] * ds, z=v[:,2] * ds,
+                    i=f[:,0], j=f[:,1], k=f[:,2],
+                    color="gainsboro", opacity=0.05,
+                    lighting=dict(
+                        ambient=0.4,
+                        diffuse=0.6,
+                        specular=0.5,
+                        roughness=0.3
+                    ),
+                    lightposition=dict(x=150, y=150, z=250),
+                    name="Brain", hoverinfo="skip"
+                ))
+            except Exception as e:
+                print(f"Error marching cubes for brain: {e}")
 
     labels_to_draw = [2, 4, 3, 1] if target_label == 0 else [target_label]
 
     for lbl in labels_to_draw:
         name, col = colors_3d[lbl]
-        bin_vol = (pred_ds == lbl).astype(np.uint8)
-        if bin_vol.sum() > 0:
-            v, f, _, _ = measure.marching_cubes(bin_vol, level=0.5, allow_degenerate=True)
-            fig_3d.add_trace(go.Mesh3d(
-                x=v[:,0] * ds, y=v[:,1] * ds, z=v[:,2] * ds,
-                i=f[:,0], j=f[:,1], k=f[:,2],
-                color=col, opacity=1.0 if target_label != 0 else op_map[lbl], name=name
-            ))
+        bin_vol = (pred_ds == lbl).astype(np.float32)
+        if bin_vol.sum() >= 10:
+            # Match Colab add_tumor_mesh: smooth_sigma=0.8, level=0.2
+            bin_smooth = gaussian_filter(bin_vol, sigma=0.8)
+            try:
+                v, f, _, _ = measure.marching_cubes(bin_smooth, level=0.2, allow_degenerate=True)
+                fig_3d.add_trace(go.Mesh3d(
+                    x=v[:,0] * ds, y=v[:,1] * ds, z=v[:,2] * ds,
+                    i=f[:,0], j=f[:,1], k=f[:,2],
+                    color=col, opacity=op_map[lbl] if target_label == 0 else 1.0,
+                    lighting=dict(
+                        ambient=0.5,
+                        diffuse=0.8,
+                        specular=0.3,
+                        roughness=0.5,
+                    ),
+                    lightposition=dict(x=100, y=200, z=300),
+                    name=name
+                ))
+            except Exception as e:
+                print(f"Error marching cubes for label {lbl}: {e}")
             
-    axis_config = dict(showgrid=True, gridcolor='#444444', zerolinecolor='#444444', color='white', showbackground=False, title_font=dict(color='white'))
+    # Match Colab Clean Layout: No Grid, No Box, White Background, Eye Camera
+    camera = dict(
+        eye=dict(x=1.5, y=1.5, z=1.0),
+        up=dict(x=0, y=0, z=1),
+    )
+    scene_config = dict(
+        aspectmode="data",
+        xaxis=dict(visible=False, showgrid=False, zeroline=False, showbackground=False),
+        yaxis=dict(visible=False, showgrid=False, zeroline=False, showbackground=False),
+        zaxis=dict(visible=False, showgrid=False, zeroline=False, showbackground=False),
+        bgcolor="white",
+        camera=camera,
+    )
     fig_3d.update_layout(
-        paper_bgcolor='black', plot_bgcolor='black', font=dict(color='white'),
-        scene=dict(aspectmode="data", xaxis=dict(**axis_config, title="X"), yaxis=dict(**axis_config, title="Y"), zaxis=dict(**axis_config, title="Z"), bgcolor='black'),
+        paper_bgcolor='white', plot_bgcolor='white', font=dict(color='black'),
+        scene=scene_config,
         margin=dict(l=0, r=0, b=0, t=0)
     )
     fig_3d.write_html(out_path, full_html=True, include_plotlyjs='cdn')
+
 
 # ── Progress helper ──
 def _update_scan_progress(db, scan, status: str, progress: int, message: str = None):
@@ -656,7 +702,10 @@ async def upload_mri_smart(
 
     save_log(db, current_user.username, current_user.role, "Upload MRI", f"Upload scan untuk pasien: {nama} (Model: {model_type})")
 
-    background_tasks.add_task(process_mri_ai, new_scan.id, input_dir, output_dir, case_id, gt_file_path, model_type)
+    # Enqueue task asinkron ke Celery worker via Redis broker
+    from tasks import process_mri_ai_task
+    process_mri_ai_task.delay(new_scan.id, input_dir, output_dir, case_id, gt_file_path, model_type)
+
     return {
         "status": "sukses",
         "pesan": f"ZIP terekstrak dan masuk antrean AI (model: {model_type})",
@@ -724,7 +773,12 @@ def get_mri_slice(analysis_id: int, axis: int = 2, idx: int = 75, label: str = "
         elif label == "et": pred_s = np.where(pred_s == 3, 3, 0)
         elif label == "rc": pred_s = np.where(pred_s == 4, 4, 0)
 
-        colors_hex = {1: "#e41a1c", 2: "#377eb8", 3: "#4daf4a", 4: "#984ea3"}
+        colors_hex = {
+            1: "#00ffff",  # NETC (Cyan)
+            2: "#e5c100",  # SNFH (Yellow/Gold)
+            3: "#ff0000",  # ET (Red)
+            4: "#ff00ff"   # RC (Purple/Magenta)
+        }
         mask_cmap = ListedColormap(["none", colors_hex[1], colors_hex[2], colors_hex[3], colors_hex[4]])
 
         fig, ax = plt.subplots(figsize=(6, 6), dpi=100)

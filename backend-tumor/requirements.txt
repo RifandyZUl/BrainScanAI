@@ -41,4 +41,7 @@ Pillow
 # ─── Utilities ────────────────────────────────────────────
 numpy<2.0
 pytz
+celery
+redis
+
 

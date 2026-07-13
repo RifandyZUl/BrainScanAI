@@ -28,6 +28,7 @@ RUN pip install --no-cache-dir \
 
 # Instal sisa library Python
 RUN pip install --no-cache-dir \
+    -i https://pypi.tuna.tsinghua.edu.cn/simple \
     --timeout=120 \
     --retries=5 \
     fastapi \
@@ -49,7 +50,11 @@ RUN pip install --no-cache-dir \
     plotly \
     Pillow \
     "numpy<2.0" \
-    pytz
+    pytz \
+    celery \
+    redis
+
+
 
 
 # Salin sisa kode backend

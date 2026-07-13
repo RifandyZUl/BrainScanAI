@@ -23,13 +23,35 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db  # Backend harus menunggu Database menyala dulu
+      - db
+      - redis
     volumes:
       - ./uploads:/app/uploads
       - .:/app
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     restart: unless-stopped
     # Inference berjalan di CPU (torch CPU-only) sehingga GPU tidak diperlukan
+
+  # 3. Redis broker untuk Celery
+  redis:
+    image: redis:alpine
+    container_name: axon-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  # 4. Celery worker untuk pemrosesan AI asinkron
+  celery-worker:
+    build: .
+    container_name: axon-celery
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./uploads:/app/uploads
+      - .:/app
+    command: celery -A tasks.celery_app worker --loglevel=info --concurrency=1
+    restart: unless-stopped
 
 # Mendefinisikan tempat penyimpanan permanen untuk database
 volumes:

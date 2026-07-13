@@ -12,7 +12,6 @@ import 'package:flutter/foundation.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class DetailAnalisisPage extends StatefulWidget {
   final String analysisId;
   final String role;
@@ -192,11 +191,15 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.broken_image_rounded, color: Colors.redAccent, size: 40),
+                const Icon(Icons.broken_image_rounded,
+                    color: Colors.redAccent, size: 40),
                 const SizedBox(height: 12),
                 Text(
                   "Gagal memuat visualisasi 2D",
-                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 4),
                 Padding(
@@ -204,7 +207,8 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
                   child: Text(
                     "Pastikan backend aktif. (Error: $error)",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(color: Colors.grey[400], fontSize: 10),
+                    style: GoogleFonts.poppins(
+                        color: Colors.grey[400], fontSize: 10),
                   ),
                 ),
               ],
@@ -219,10 +223,26 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
       child: _isInverted
           ? ColorFiltered(
               colorFilter: const ColorFilter.matrix([
-                -1,  0,  0,  0, 255,
-                 0, -1,  0,  0, 255,
-                 0,  0, -1,  0, 255,
-                 0,  0,  0,  1,   0,
+                -1,
+                0,
+                0,
+                0,
+                255,
+                0,
+                -1,
+                0,
+                0,
+                255,
+                0,
+                0,
+                -1,
+                0,
+                255,
+                0,
+                0,
+                0,
+                1,
+                0,
               ]),
               child: imageWidget(url),
             )
@@ -677,13 +697,13 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
                                               _build3DChip("Full", "all",
                                                   AppColors.blueDark),
                                               _build3DChip("NETC", "netc",
-                                                  const Color(0xffe41a1c)),
+                                                  const Color(0xff00ffff)),
                                               _build3DChip("SNFH", "snfh",
-                                                  const Color(0xff377eb8)),
+                                                  const Color(0xffe5c100)),
                                               _build3DChip("ET", "et",
-                                                  const Color(0xff4daf4a)),
+                                                  const Color(0xffff0000)),
                                               _build3DChip("RC", "rc",
-                                                  const Color(0xff984ea3)),
+                                                  const Color(0xffff00ff)),
                                             ],
                                           ),
                                         ],
@@ -707,12 +727,15 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
                 // ==========================================
                 String modelFormatted = "-";
                 if (data['model_type'] != null) {
-                  if (data['model_type'].toString().toLowerCase() == 'optimisasi') {
+                  if (data['model_type'].toString().toLowerCase() ==
+                      'optimisasi') {
                     modelFormatted = 'CKD-TransBTS Optimisasi (L5)';
-                  } else if (data['model_type'].toString().toLowerCase() == 'paper') {
+                  } else if (data['model_type'].toString().toLowerCase() ==
+                      'paper') {
                     modelFormatted = 'CKD-TransBTS Paper';
                   } else {
-                    modelFormatted = data['model_type'].toString().toUpperCase();
+                    modelFormatted =
+                        data['model_type'].toString().toUpperCase();
                   }
                 }
 
@@ -725,103 +748,14 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
                   // --- INFO PASIEN ---
                   _buildSectionTitle('Informasi Pasien'),
                   const SizedBox(height: 10),
-                  _buildInfoRow(
-                      'Nama Pasien', data['nama_pasien'] ?? "-",
+                  _buildInfoRow('Nama Pasien', data['nama_pasien'] ?? "-",
                       isBold: true),
                   _buildInfoRow('ID Medis', data['id_rm'] ?? "-"),
-                  _buildInfoRow(
-                      'Waktu Scan', data['waktu_scan'] ?? "-"),
-                  _buildInfoRow(
-                      'Model AI', modelFormatted),
-                  _buildInfoRow(
-                      'Durasi Analisis AI', durationFormatted),
+                  _buildInfoRow('Waktu Scan', data['waktu_scan'] ?? "-"),
+                  _buildInfoRow('Model AI', modelFormatted),
+                  _buildInfoRow('Durasi Analisis AI', durationFormatted),
 
                   _buildDivider(),
-
-
-                  // --- TABEL METRIK (DOSEN) ---
-                  if (data['metrics'] != null) ...[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildSectionTitle('Evaluasi Metrik AI'),
-                        // Toggle view metrik
-                        Row(
-                          children: [
-                            ChoiceChip(
-                              label: const Text("Per-Class"),
-                              selected: _metricViewMode == "per_class",
-                              selectedColor: Colors.blue.shade100,
-                              labelStyle: GoogleFonts.poppins(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: _metricViewMode == "per_class"
-                                    ? Colors.blue.shade900
-                                    : Colors.grey.shade700,
-                              ),
-                              onSelected: (selected) {
-                                if (selected) {
-                                  setState(() => _metricViewMode = "per_class");
-                                }
-                              },
-                            ),
-                            const SizedBox(width: 6),
-                            ChoiceChip(
-                              label: const Text("Per-Region BraTS"),
-                              selected: _metricViewMode == "per_region",
-                              selectedColor: Colors.blue.shade100,
-                              labelStyle: GoogleFonts.poppins(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: _metricViewMode == "per_region"
-                                    ? Colors.blue.shade900
-                                    : Colors.grey.shade700,
-                              ),
-                              onSelected: (selected) {
-                                if (selected) {
-                                  setState(() => _metricViewMode = "per_region");
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Table(
-                        border: TableBorder.symmetric(
-                            inside: BorderSide(
-                                color: Colors.grey.shade200)),
-                        columnWidths: const {
-                          0: FlexColumnWidth(2.2),
-                          1: FlexColumnWidth(1.8),
-                          2: FlexColumnWidth(1.8),
-                          3: FlexColumnWidth(1.8),
-                        },
-                        children: [
-                          TableRow(
-                              decoration: BoxDecoration(
-                                  color: Colors.grey.shade100),
-                              children: [
-                                _tableCell("Kelas/Region", isHeader: true),
-                                _tableCell("Dice",
-                                    isHeader: true),
-                                _tableCell("Sensitivity",
-                                    isHeader: true),
-                                _tableCell("HD95",
-                                    isHeader: true),
-                              ]),
-                          ..._buildMetricRows(data['metrics']),
-                        ],
-                      ),
-                    ),
-                    _buildDivider(),
-                  ],
 
                   // --- KETERANGAN WARNA ---
                   _buildSectionTitle('Keterangan Segmentasi'),
@@ -831,42 +765,36 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
                       decoration: BoxDecoration(
                         color: const Color(0xFFF9FAFB),
                         borderRadius: BorderRadius.circular(8),
-                        border:
-                            Border.all(color: Colors.grey.shade200),
+                        border: Border.all(color: Colors.grey.shade200),
                       ),
                       child: Builder(builder: (context) {
                         List<dynamic> detectedRegions =
-                            data['detected_regions'] ??
-                                [1, 2, 3, 4];
-                        Map<int, Map<String, dynamic>> legendData =
-                            {
+                            data['detected_regions'] ?? [1, 2, 3, 4];
+                        Map<int, Map<String, dynamic>> legendData = {
                           1: {
                             "label": "Necrotic Tumor Core (NETC)",
-                            "color": const Color(0xffe41a1c)
+                            "color": const Color(0xff00ffff)
                           },
                           2: {
                             "label": "Peritumoral Edema (SNFH)",
-                            "color": const Color(0xff377eb8)
+                            "color": const Color(0xffe5c100)
                           },
                           3: {
                             "label": "Enhancing Tumor (ET)",
-                            "color": const Color(0xff4daf4a)
+                            "color": const Color(0xffff0000)
                           },
                           4: {
                             "label": "Resection Cavity (RC)",
-                            "color": const Color(0xff984ea3)
+                            "color": const Color(0xffff00ff)
                           },
                         };
                         return Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                          children:
-                              detectedRegions.map<Widget>((id) {
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: detectedRegions.map<Widget>((id) {
                             if (legendData.containsKey(id)) {
                               return _buildLegendItem(
                                   legendData[id]!["color"] as Color,
-                                  legendData[id]!["label"]
-                                      as String);
+                                  legendData[id]!["label"] as String);
                             }
                             return const SizedBox.shrink();
                           }).toList(),
@@ -884,8 +812,7 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
                     decoration: BoxDecoration(
                         color: const Color(0xFFF9FAFB),
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                            color: Colors.grey.shade200)),
+                        border: Border.all(color: Colors.grey.shade200)),
                     child: PoppinsTextView(
                         value: (data['notes_radiolog'] == null ||
                                 data['notes_radiolog'] == "" ||
@@ -900,16 +827,11 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
 
                   // --- CATATAN DOKTER ---
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _buildSectionTitle('Catatan Dokter'),
-                      Icon(
-                          isDokter
-                              ? Icons.edit
-                              : Icons.lock_outline,
-                          size: 14,
-                          color: Colors.grey),
+                      Icon(isDokter ? Icons.edit : Icons.lock_outline,
+                          size: 14, color: Colors.grey),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -918,11 +840,10 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
                       controller: doctorNotesController,
                       minLines: 3,
                       maxLines: 4,
-                      style: const TextStyle(
-                          fontFamily: 'Poppins', fontSize: 12),
+                      style:
+                          const TextStyle(fontFamily: 'Poppins', fontSize: 12),
                       decoration: InputDecoration(
-                        hintText:
-                            'Tulis diagnosis atau tindakan...',
+                        hintText: 'Tulis diagnosis atau tindakan...',
                         hintStyle: const TextStyle(
                             fontFamily: 'Poppins',
                             color: Colors.grey,
@@ -931,12 +852,12 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
                         fillColor: const Color(0xFFF9FAFB),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(
-                                color: Colors.grey.shade300)),
+                            borderSide:
+                                BorderSide(color: Colors.grey.shade300)),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(
-                                color: Colors.grey.shade300)),
+                            borderSide:
+                                BorderSide(color: Colors.grey.shade300)),
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 16),
                       ),
@@ -948,8 +869,7 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
                       decoration: BoxDecoration(
                           color: const Color(0xFFF9FAFB),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                              color: Colors.grey.shade200)),
+                          border: Border.all(color: Colors.grey.shade200)),
                       child: PoppinsTextView(
                           value: (data['notes_dokter'] == null ||
                                   data['notes_dokter'] == "")
@@ -970,7 +890,8 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: isScrollableMode ? MainAxisSize.min : MainAxisSize.max,
+                    mainAxisSize:
+                        isScrollableMode ? MainAxisSize.min : MainAxisSize.max,
                     children: [
                       if (isScrollableMode) ...[
                         ...infoPanelContents,
@@ -1067,7 +988,6 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
                 }
               }));
         }));
-
   }
 
   // --- WIDGET HELPER ---
@@ -1146,12 +1066,11 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
 
   List<TableRow> _buildMetricRows(Map metrics) {
     List<TableRow> rows = [];
-    
+
     if (_metricViewMode == 'per_class') {
       // Mode Per-Class (NETC, SNFH, ET, RC, Mean)
-      Map perClass = metrics.containsKey('per_class')
-          ? metrics['per_class']
-          : metrics;
+      Map perClass =
+          metrics.containsKey('per_class') ? metrics['per_class'] : metrics;
 
       final order = ['NETC', 'SNFH', 'ET', 'RC', 'mean'];
       for (var className in order) {
@@ -1166,14 +1085,12 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
         String col2 = data.containsKey('sens')
             ? (data['sens']?.toString() ?? '-')
             : (data['specificity']?.toString() ?? '-');
-        String col3 = data.containsKey('hd95')
-            ? (data['hd95']?.toString() ?? '-')
-            : '-';
+        String col3 =
+            data.containsKey('hd95') ? (data['hd95']?.toString() ?? '-') : '-';
 
         rows.add(TableRow(
-          decoration: isMeanRow
-              ? BoxDecoration(color: Colors.blue.shade50)
-              : null,
+          decoration:
+              isMeanRow ? BoxDecoration(color: Colors.blue.shade50) : null,
           children: [
             _tableCell(label, isHeader: isMeanRow),
             _tableCell(col1),
@@ -1207,7 +1124,8 @@ class _DetailAnalisisPageState extends State<DetailAnalisisPage> {
       }
 
       // Mean BraTS 6
-      if (metrics.containsKey('mean_brats_6') && metrics['mean_brats_6'] != null) {
+      if (metrics.containsKey('mean_brats_6') &&
+          metrics['mean_brats_6'] != null) {
         var meanData = metrics['mean_brats_6'];
         String col1 = meanData['dice']?.toString() ?? '-';
         String col2 = meanData['sens']?.toString() ?? '-';

@@ -96,7 +96,7 @@ def preprocess_for_l5(
     """
     data_paths = _build_data_dict(input_dir, case_id)
 
-    use_label_crop = gt_label_path is not None and os.path.exists(gt_label_path)
+    use_label_crop = False
 
     if use_label_crop:
         print(f"[L5 PREPROCESS] Mode VALIDASI: source_key='label' (match notebook val_transforms)")

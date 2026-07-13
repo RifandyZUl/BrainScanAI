@@ -702,9 +702,7 @@ async def upload_mri_smart(
 
     save_log(db, current_user.username, current_user.role, "Upload MRI", f"Upload scan untuk pasien: {nama} (Model: {model_type})")
 
-    # Enqueue task asinkron ke Celery worker via Redis broker
-    from tasks import process_mri_ai_task
-    process_mri_ai_task.delay(new_scan.id, input_dir, output_dir, case_id, gt_file_path, model_type)
+    background_tasks.add_task(process_mri_ai, new_scan.id, input_dir, output_dir, case_id, gt_file_path, model_type)
 
     return {
         "status": "sukses",

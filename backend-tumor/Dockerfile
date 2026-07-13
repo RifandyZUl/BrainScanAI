@@ -50,9 +50,8 @@ RUN pip install --no-cache-dir \
     plotly \
     Pillow \
     "numpy<2.0" \
-    pytz \
-    celery \
-    redis
+    pytz
+
 
 
 

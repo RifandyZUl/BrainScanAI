@@ -57,7 +57,7 @@ class LeftTextMenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PoppinsTextView(
-                value: 'NeuroScan AI v1.0.0',
+                value: 'BrainScan AI v1.0.0',
                 size: SizeConfig.safeBlockHorizontal * 0.7,
                 color: AppColors.grey,
                 fontWeight: FontWeight.w500,

@@ -1,4 +1,4 @@
-# 📋 Dokumentasi Teknis Lengkap — NeuroScan AI
+# 📋 Dokumentasi Teknis Lengkap — BrainScan AI
 **Brain Tumor Detection & Segmentation System**
 
 | Item | Detail |
@@ -45,7 +45,7 @@ graph TB
             AI["🧠 PyTorch AI Model<br/>TransBTS & L5 Optimisasi"]
         end
 
-        STATIC["📁 Flutter Web<br/>/var/www/neuroscan"]
+        STATIC["📁 Flutter Web<br/>/var/www/BrainScan"]
     end
 
     USER -->|"http://31.97.49.142"| NGINX
@@ -58,7 +58,7 @@ graph TB
 ### Alur Kerja Sistem
 1. **User** mengakses `http://31.97.49.142` melalui browser
 2. **Nginx** menerima request dan menentukan routing:
-   - Request ke `/` → diarahkan ke file statis Flutter Web (`/var/www/neuroscan/`)
+   - Request ke `/` → diarahkan ke file statis Flutter Web (`/var/www/BrainScan/`)
    - Request ke `/api/` → di-proxy ke FastAPI backend (port 8000)
 3. **FastAPI** memproses request API (autentikasi, CRUD pasien, upload MRI)
 4. **PostgreSQL** menyimpan data pasien, scan MRI, dan hasil analisis
@@ -264,7 +264,7 @@ server {
 
     # Frontend (Flutter Web)
     location / {
-        root /var/www/neuroscan;
+        root /var/www/BrainScan;
         try_files $uri $uri/ /index.html;
     }
 }
@@ -296,7 +296,7 @@ class ApiConfig {
 flutter build web
 
 # Upload ke VPS
-scp -r "...\build\web" root@31.97.49.142:/var/www/neuroscan
+scp -r "...\build\web" root@31.97.49.142:/var/www/BrainScan
 ```
 
 #### Langkah 12: Seed Database & Verifikasi
@@ -326,7 +326,7 @@ docker exec -it axon-backend python seed.py
 │   └── model/                  # Inference & architecture code
 └── backups/                    # Auto-generated database backups
 
-/var/www/neuroscan/             # Flutter Web frontend (static files)
+/var/www/BrainScan/             # Flutter Web frontend (static files)
 ├── index.html
 ├── main.dart.js
 ├── assets/
@@ -334,7 +334,7 @@ docker exec -it axon-backend python seed.py
 └── icons/
 
 /etc/nginx/sites-available/
-└── neuroscan                   # Nginx virtual host config
+└── BrainScan                   # Nginx virtual host config
 ```
 
 ### Docker Containers
@@ -389,10 +389,10 @@ cd C:\Sempro\SistemUjiCoba\brain-tumor-detection-app\tumor-frontend
 flutter build web
 
 # 2. Upload ke VPS
-scp -r "...\build\web" root@31.97.49.142:/var/www/neuroscan
+scp -r "...\build\web" root@31.97.49.142:/var/www/BrainScan
 
 # 3. Di VPS, pindahkan file dan restart Nginx
-mv /var/www/neuroscan/web/* /var/www/neuroscan/ && rm -rf /var/www/neuroscan/web
+mv /var/www/BrainScan/web/* /var/www/BrainScan/ && rm -rf /var/www/BrainScan/web
 systemctl restart nginx
 ```
 
@@ -497,7 +497,7 @@ swapon /swapfile
 |------|---------------|
 | Environment Variables | `/root/backend-tumor/.env` |
 | Docker Compose | `/root/backend-tumor/docker-compose.yml` |
-| Nginx Config | `/etc/nginx/sites-available/neuroscan` |
+| Nginx Config | `/etc/nginx/sites-available/BrainScan` |
 | Cron Backup | `crontab -e` (root user) |
 
 ---
@@ -513,4 +513,4 @@ ls -la /root/backups/
 
 ---
 
-*Dokumentasi ini berlaku per tanggal 5 Juli 2026. Sistem NeuroScan AI v1.0 — Production Release.*
+*Dokumentasi ini berlaku per tanggal 5 Juli 2026. Sistem BrainScan AI v1.0 — Production Release.*

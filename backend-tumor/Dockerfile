@@ -17,13 +17,14 @@ COPY requirements.txt .
 
 # Instal PyTorch CPU-only terlebih dahulu dari index resmi PyTorch
 # (hindari mengunduh versi CUDA yang sangat besar dari PyPI)
-RUN pip install --no-cache-dir \
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir \
     --timeout=120 \
     --retries=5 \
     "numpy<2.0" \
     torch==2.5.1+cpu \
     torchvision==0.20.1+cpu \
-    --index-url https://download.pytorch.org/whl/cpu
+    --extra-index-url https://download.pytorch.org/whl/cpu
 
 
 # Instal sisa library Python

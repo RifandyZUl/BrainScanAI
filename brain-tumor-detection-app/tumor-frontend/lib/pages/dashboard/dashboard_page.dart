@@ -393,7 +393,7 @@ class _RadiologLeftMenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PoppinsTextView(
-                value: 'NeuroScan AI v1.0.0',
+                value: 'BrainScan AI v1.0.0',
                 size: 11,
                 color: Colors.grey,
                 fontWeight: FontWeight.w500,

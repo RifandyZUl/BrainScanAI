@@ -292,7 +292,7 @@ class AdminDashboardPage extends StatelessWidget {
                   color: AppColors.grey.withOpacity(0.5), thickness: 0.5),
               const SizedBox(height: 10),
               PoppinsTextView(
-                  value: "NeuroScan AI v1.0.0", size: 10, color: AppColors.grey),
+                  value: "BrainScan AI v1.0.0", size: 10, color: AppColors.grey),
               const SizedBox(height: 4),
               PoppinsTextView(
                   value: "© 2026 All Rights Reserved",

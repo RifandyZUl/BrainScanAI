@@ -431,7 +431,7 @@ class DokterDashboardPage extends StatelessWidget {
                 children: [
                   Text.rich(
                     TextSpan(
-                      text: "Neuro",
+                      text: "Brain",
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -514,7 +514,7 @@ class DokterDashboardPage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               PoppinsTextView(
-                value: "NeuroScan AI v1.0.0",
+                value: "BrainScan AI v1.0.0",
                 size: 10,
                 color: Colors.white.withOpacity(0.4),
               ),
@@ -659,7 +659,7 @@ class DokterDashboardPage extends StatelessWidget {
     SnackbarHelper.showConfirmDialog(
         title: "Konfirmasi Logout",
         description:
-            "Apakah Anda yakin ingin keluar dari aplikasi NeuroScan AI? Sesi Anda akan berakhir.",
+            "Apakah Anda yakin ingin keluar dari aplikasi BrainScan AI? Sesi Anda akan berakhir.",
         confirmText: "Ya, Keluar",
         icon: Icons.power_settings_new_rounded,
         iconColor: Colors.redAccent,

@@ -1,36 +1,31 @@
-# docker-compose.yml (version field dihapus karena sudah obsolete di Docker Compose v2+)
-
 services:
-  # 1. Komputer Mini untuk Database (PostgreSQL)
+  # 1. Database Khusus BrainScan AI
   db:
     image: postgres:15-alpine
-    container_name: axon-postgres
+    container_name: brainscan-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: passwordnabilaesd
       POSTGRES_DB: tumordb
     ports:
-      # Membuka port 5433 di luar agar tidak bentrok dengan Postgres bawaan laptop
       - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - brainscan_postgres_data:/var/lib/postgresql/data
 
-  # 2. Komputer Mini untuk FastAPI dan AI
+  # 2. Backend FastAPI & AI Khusus BrainScan AI
   fastapi-backend:
-    build: .
-    container_name: axon-backend
+    image: backend-tumor-celery-worker:latest
+    container_name: brainscan-backend
     ports:
       - "8000:8000"
     depends_on:
-      - db  # Backend harus menunggu Database menyala dulu
+      - db
     volumes:
       - ./uploads:/app/uploads
       - .:/app
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     restart: unless-stopped
-    # Inference berjalan di CPU (torch CPU-only) sehingga GPU tidak diperlukan
 
-# Mendefinisikan tempat penyimpanan permanen untuk database
 volumes:
-  postgres_data:
+  brainscan_postgres_data:

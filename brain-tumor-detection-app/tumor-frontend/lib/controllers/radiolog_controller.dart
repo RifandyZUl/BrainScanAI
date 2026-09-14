@@ -206,7 +206,7 @@ class RadiologController extends GetxController {
     } else if (activeIndex.value == 2) {
       return "Pengaturan Profil";
     }
-    return "NeuroScan AI";
+    return "BrainScan AI";
   }
 
   void changeMenu(int index) {

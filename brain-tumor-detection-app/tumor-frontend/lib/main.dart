@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'NeuroScan AI',
+      title: 'BrainScan AI',
 
       // [2] SISTEM ROUTING (JANGAN LUPA BAGIAN INI)
       initialRoute: AppRoute.login, // Halaman pertama yang dibuka

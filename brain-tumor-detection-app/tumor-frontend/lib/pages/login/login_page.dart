@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                             const SizedBox(width: 10),
                             Text.rich(
                               TextSpan(
-                                text: "Neuro",
+                                text: "Brain",
                                 style: GoogleFonts.poppins(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                         
                         const SizedBox(height: 48),
                         Text(
-                          '© 2026 NeuroScan AI. All Rights Reserved.',
+                          '© 2026 BrainScan AI. All Rights Reserved.',
                           style: GoogleFonts.poppins(
                             fontSize: 11,
                             color: Colors.grey[400],
@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(width: 12),
                               Text.rich(
                                 TextSpan(
-                                  text: "Neuro",
+                                  text: "Brain",
                                   style: GoogleFonts.poppins(
                                     fontSize: 26,
                                     fontWeight: FontWeight.bold,
@@ -237,10 +237,10 @@ class _LoginPageState extends State<LoginPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // Header: NeuroScan AI + Subtitle
+                                // Header: BrainScan AI + Subtitle
                                 Text.rich(
                                   TextSpan(
-                                    text: "Neuro",
+                                    text: "Brain",
                                     style: GoogleFonts.poppins(
                                       fontSize: 38,
                                       fontWeight: FontWeight.bold,
@@ -281,7 +281,7 @@ class _LoginPageState extends State<LoginPage> {
                                 // Footer Copyright
                                 Center(
                                   child: Text(
-                                    '© 2026 NeuroScan AI. All Rights Reserved.',
+                                    '© 2026 BrainScan AI. All Rights Reserved.',
                                     style: GoogleFonts.poppins(
                                       fontSize: 11,
                                       color: Colors.grey[400],

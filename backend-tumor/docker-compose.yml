@@ -1,3 +1,5 @@
+name: brainscan
+
 services:
   # 1. Database Khusus BrainScan AI
   db:
@@ -9,23 +11,37 @@ services:
       POSTGRES_PASSWORD: passwordnabilaesd
       POSTGRES_DB: tumordb
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
       - brainscan_postgres_data:/var/lib/postgresql/data
+    networks:
+      - brainscan_net
 
   # 2. Backend FastAPI & AI Khusus BrainScan AI
   fastapi-backend:
-    image: backend-tumor-celery-worker:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: brainscan-backend:latest
     container_name: brainscan-backend
     ports:
-      - "8000:8000"
+      - "8001:8000"
     depends_on:
       - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:passwordnabilaesd@db:5432/tumordb
     volumes:
       - ./uploads:/app/uploads
       - .:/app
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     restart: unless-stopped
+    networks:
+      - brainscan_net
 
 volumes:
   brainscan_postgres_data:
+    name: brainscan_postgres_data
+
+networks:
+  brainscan_net:
+    name: brainscan_net
